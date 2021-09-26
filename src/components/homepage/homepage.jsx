@@ -1,6 +1,8 @@
 import React from "react";
 import Playlist from "../playlist/playlist";
 import "../homepage/homepage.scss"
+import { Button } from "@material-ui/core";
+import {Link} from 'react-router-dom'
 
 
 const homepage =()=>{
@@ -53,6 +55,8 @@ return <div className="home">
     
 
        </div>
+       <Link to ="/search">Search artists</Link>
+      
       
            
 </div>

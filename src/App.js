@@ -3,15 +3,17 @@ import axios from 'axios';
 //import './App.css';
 import React from 'react';
 import Login from './components/login/loginComponent'
-import Example from './components/spotifyExample/example'
+
 import Player from './components/spotifyPlayer/spotifyPlayer.jsx'
 import Homepage from './components/homepage/homepage';
 import {Route} from 'react-router-dom';
-import { Playlist } from 'react-spotify-api';
+
 import {connect} from "react-redux";
 import setToken from './redux/user/user-action';
 import setPlaylists from './redux/playlists/playlist-action';
 import UserSearch from './components/search/search';
+//import UserSearch from './components/searchHooks/search';
+//import UserSearch from './components/search_flexbox/search';
 
 
 class App extends React.Component{
@@ -71,8 +73,8 @@ resPlaylists && setPlaylists(resPlaylists.data.items)
                 !token && <Login></Login>
               }
               
-              {/*token && <Route exact path='/'  render={()=><Homepage  ></Homepage>}></Route> */}
-              {token && <UserSearch  token={token}></UserSearch>}
+              {token && <Route exact path='/'  render={()=><Homepage  ></Homepage>}></Route> }
+              {token && <Route exact path = '/search' render ={()=><UserSearch ></UserSearch>} ></Route>}
               
             </div>
   
