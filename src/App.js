@@ -10,7 +10,7 @@ import {Route} from 'react-router-dom';
 
 import {connect} from "react-redux";
 import setToken from './redux/user/user-action';
-import setPlaylists from './redux/playlists/playlist-action';
+import {setPlaylists,fetchPlaylists} from './redux/playlists/playlist-action';
 import UserSearch from './components/search/search';
 //import UserSearch from './components/searchHooks/search';
 //import UserSearch from './components/search_flexbox/search';
@@ -18,22 +18,18 @@ import UserSearch from './components/search/search';
 
 class App extends React.Component{
 
-   // constructor(){
-  //   super()
+   constructor(){
+    super()
 
-  //   this.state={
-
-  //     token:'',
-  //     currentSong : null,
-  //     playlists : []
-  //   }
-  // }
+    console.log("constructor");
+  }
 
 
  
   
  componentDidMount = async()=>{
-  const {setToken,setPlaylists} = this.props;
+   console.log("componentid mount");
+   const {setToken,fetchPlaylists} = this.props;
    const hash = window.location.hash;
 
    hash && console.log(hash);
@@ -42,32 +38,48 @@ class App extends React.Component{
    token_ && setToken(token_);
    
   
-  const resPlaylists =  token_ && await axios({
+//   const resPlaylists =  token_ && await axios({
 
-   method:"GET",
-   url: `https://api.spotify.com/v1/me/playlists`,
-   headers:{
-    'Authorization' : `Bearer ${token_}`
-   }
+//    method:"GET",
+//    url: `https://api.spotify.com/v1/me/playlists`,
+//    headers:{
+//     'Authorization' : `Bearer ${token_}`
+//    }
 
 
-})
-console.log(resPlaylists);
-resPlaylists && setPlaylists(resPlaylists.data.items)
+// })
+// console.log(resPlaylists);
+// resPlaylists && setPlaylists(resPlaylists.data.items)
    
+ //implement saga style
 
+ token_ && fetchPlaylists(token_);
 
   }
-  
+ 
 
 
 
+componentDidUpdate(){
+
+  console.log("component did update");
+}
+
+componentDidCatch(){
+  console.log("component did catch");
+}
+
+componentWillUnmount(){
+
+  console.log("component unmount");
+}
 
   
   
   render(){
+    console.log("render component");
     const {playlists,token} = this.props;
-    console.log(playlists);
+    //console.log(playlists);
     return <div>
               {
                 !token && <Login></Login>
@@ -101,7 +113,7 @@ resPlaylists && setPlaylists(resPlaylists.data.items)
       return {
          
         setToken : token=> dispatch(setToken(token)),
-        setPlaylists : playlists=>dispatch(setPlaylists(playlists))
+        fetchPlaylists : token=>dispatch(fetchPlaylists(token))
        
       }
     }

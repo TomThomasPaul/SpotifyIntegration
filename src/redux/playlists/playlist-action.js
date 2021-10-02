@@ -1,4 +1,14 @@
-const setPlaylists = (playlists)=>{
+
+export const fetchPlaylists = (token)=>{
+
+   return {
+       type: "FETCH_PLAYLISTS",
+       payload: token
+   }
+
+}
+
+export const setPlaylists = (playlists)=>{
 
 return {
 
@@ -8,4 +18,3 @@ return {
 
 }
 
-export default setPlaylists;
