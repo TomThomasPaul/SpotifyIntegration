@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import "../playlist/playlist.scss";
+import {fetchPlaylists} from '../../redux/playlists/playlist-action';
 
-const Playlist=({playlists})=>{
+const Playlist=({fetchPlaylists,token,playlists})=>{
+
+   useEffect(()=>{
+      //saga
+      fetchPlaylists(token);
+
+   },[]) //empty array to load only once
+    
 
         console.log(playlists);
         return <div className="playlists">
@@ -27,8 +35,19 @@ const Playlist=({playlists})=>{
 const mapStateToProps =(rootReducer)=>{
      return {
 
-        playlists : rootReducer.playlists.playlists
+        playlists : rootReducer.playlists.playlists,
+        token : rootReducer.token.userToken
      }
 
 }
-export default connect(mapStateToProps)(Playlist);
+
+const mapDispatchToProps =(dispatch)=>{
+   return {
+      
+     
+     fetchPlaylists : token=>dispatch(fetchPlaylists(token)),
+    
+    
+   }
+ }
+export default connect(mapStateToProps,mapDispatchToProps)(Playlist);

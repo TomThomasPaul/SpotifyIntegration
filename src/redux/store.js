@@ -8,10 +8,12 @@ import logger from "redux-logger";
 
 import RootSaga from "./sagas/RootSaga";
 
+import thunk from "redux-thunk";
+
 const sagaMiddleware = createSagaMiddleware();
 
 
-const middlewares = [logger,sagaMiddleware];
+const middlewares = [thunk,sagaMiddleware,logger];
 
 const store = createStore(rootReducer, applyMiddleware(...middlewares));
 

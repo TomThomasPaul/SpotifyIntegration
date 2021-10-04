@@ -1,19 +1,19 @@
 import logo from './logo.svg';
 import axios from 'axios';
-//import './App.css';
-import React from 'react';
-import Login from './components/login/loginComponent'
 
-import Player from './components/spotifyPlayer/spotifyPlayer.jsx'
-import Homepage from './components/homepage/homepage';
+import React, { lazy, Suspense } from 'react';
+
+
 import {Route} from 'react-router-dom';
 
 import {connect} from "react-redux";
-import setToken from './redux/user/user-action';
-import {setPlaylists,fetchPlaylists} from './redux/playlists/playlist-action';
-import UserSearch from './components/search/search';
-//import UserSearch from './components/searchHooks/search';
-//import UserSearch from './components/search_flexbox/search';
+import tokenStartAsync from './redux/user/user-action';
+import {fetchPlaylists} from './redux/playlists/playlist-action';
+
+const UserSearch = lazy(()=>import('./components/search/search'));
+const Login = lazy(()=>import('./components/login/loginComponent'))
+const Homepage = lazy(()=>import('./components/homepage/homepage'));
+
 
 
 class App extends React.Component{
@@ -29,31 +29,13 @@ class App extends React.Component{
   
  componentDidMount = async()=>{
    console.log("componentid mount");
-   const {setToken,fetchPlaylists} = this.props;
-   const hash = window.location.hash;
-
-   hash && console.log(hash);
-   const token_temp= hash && hash.split("=")[1]; 
-   const token_ = token_temp && (token_temp.split("&")[0]);
-   token_ && setToken(token_);
-   
   
-//   const resPlaylists =  token_ && await axios({
 
-//    method:"GET",
-//    url: `https://api.spotify.com/v1/me/playlists`,
-//    headers:{
-//     'Authorization' : `Bearer ${token_}`
-//    }
+   //implement redux thunk
+   const {tokenStartAsync} = this.props;
+   tokenStartAsync();
+ 
 
-
-// })
-// console.log(resPlaylists);
-// resPlaylists && setPlaylists(resPlaylists.data.items)
-   
- //implement saga style
-
- token_ && fetchPlaylists(token_);
 
   }
  
@@ -78,16 +60,16 @@ componentWillUnmount(){
   
   render(){
     console.log("render component");
-    const {playlists,token} = this.props;
-    //console.log(playlists);
+    const {token} = this.props;
     return <div>
+              <Suspense fallback={<div>....loading</div>}>
               {
                 !token && <Login></Login>
               }
               
               {token && <Route exact path='/'  render={()=><Homepage  ></Homepage>}></Route> }
               {token && <Route exact path = '/search' render ={()=><UserSearch ></UserSearch>} ></Route>}
-              
+              </Suspense>
             </div>
   
 
@@ -112,8 +94,9 @@ componentWillUnmount(){
     const mapDispatchToProps =(dispatch)=>{
       return {
          
-        setToken : token=> dispatch(setToken(token)),
-        fetchPlaylists : token=>dispatch(fetchPlaylists(token))
+        
+        fetchPlaylists : token=>dispatch(fetchPlaylists(token)),
+        tokenStartAsync: ()=>dispatch(tokenStartAsync())
        
       }
     }
